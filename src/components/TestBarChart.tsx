@@ -10,26 +10,28 @@ import {
   // Tooltip,
 } from "recharts";
 
-const data = [
-  { name: "Core 4%", Percentage: 4 },
-  { name: "Food 3%", Percentage: 3 },
-  { name: "Rent 2%", Percentage: 2 },
-];
+interface Props {
+  countryName: string;
+  data: { name: string; Percentage: number }[];
+}
 
-const TestBarChart = () => {
+const TestBarChart = ({ countryName, data }: Props) => {
   const xAxisTickFormatter = (value: number) => `${value}%`;
 
   // type TooltipValueFormatter = (value: string | "") => [string, string];
   // const tooltipFormatter: TooltipValueFormatter = (value) => [`${value}%`, ""];
 
+  const textColor = "#1e3a8a";
+
   return (
     <>
-    <h1 className="text-4xl text-white mb-2">United States</h1>
+    <h1 className={`text-4xl text-[${textColor}] ml-[0.5%] mb-2`}>{countryName}</h1>
     {/* set responsive container width to 99% to trigger redraw so that graph shrinks properly in smallest browser window widths */}
       <ResponsiveContainer width="99%" height="100%"> 
         <BarChart
           data={data}
           layout="vertical"
+          className="ml-[0.5%]"
         >
           <defs>
             <linearGradient id="colorUv" x1="1.3" y1="1" x2="0" y2="1">
@@ -37,14 +39,14 @@ const TestBarChart = () => {
               <stop offset="90%" stopColor="orange" stopOpacity={1} />
             </linearGradient>
           </defs>
-          <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+          <CartesianGrid stroke={textColor} strokeDasharray="5 5" />
           <XAxis
             type="number"
-            stroke="#ccc"
+            stroke={textColor}
             tickFormatter={xAxisTickFormatter}
             tick={{ fontSize: 18 }}
           />
-          <YAxis dataKey="name" type="category" stroke="#ccc" hide={true} />
+          <YAxis dataKey="name" type="category" stroke={textColor} hide={true} />
           {/* <Tooltip formatter={tooltipFormatter} /> */}
           <Bar dataKey="Percentage" fill="url(#colorUv)">
             <LabelList
