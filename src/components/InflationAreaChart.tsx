@@ -48,19 +48,13 @@ const data = [
     country2: 3800,
     country3: 2500,
   },
-  {
-    name: "Jul",
-    country1: 2390,
-    country2: 3800,
-    country3: 2500,
-  },
 ];
 
 const InflationAreaChart = () => {
   const textColor = "#1e3a8a";
 
   // country names
-  const country1Name = "United States";
+  const country1Name = "US";
   const country2Name = "China";
   const country3Name = "Japan";
 
@@ -70,71 +64,74 @@ const InflationAreaChart = () => {
   const country3Color = "red";
 
   return (
-    <ResponsiveContainer width="99%" height="100%">
-      <AreaChart data={data} className="ml-[0.5%]">
-        <defs>
-          <linearGradient id="color1" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="100%" stopColor={country1Color} stopOpacity={1} />
-            <stop offset="100%" stopColor={country1Color} stopOpacity={0} />
-          </linearGradient>
-          <linearGradient id="color2" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor={country2Color} stopOpacity={1} />
-            <stop offset="80%" stopColor={country2Color} stopOpacity={0} />
-          </linearGradient>
-          <linearGradient id="color3" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor={country3Color} stopOpacity={1} />
-            <stop offset="80%" stopColor={country3Color} stopOpacity={0} />
-          </linearGradient>
-        </defs>
-        <Legend
-          verticalAlign="top"
-          height={36}
-          align="left"
-          iconType="circle"
-          iconSize={20}
-        />
-        <XAxis
-          dataKey="name"
-          stroke={textColor}
-          tick={{ fontSize: 18 }}
-          interval={0}
-          padding={{ left: 10, right: 10 }}
-        />
-        <YAxis hide={true} />
-        <CartesianGrid
-          stroke={textColor}
-          strokeDasharray="5 5"
-          vertical={false}
-        />
-        <Tooltip />
-        <Area
-          type="monotone"
-          dataKey="country1"
-          name={country1Name}
-          stroke={country1Color}
-          fillOpacity={1}
-          fill="url(#color1)"
-        />
-        <Area
-          type="monotone"
-          dataKey="country2"
-          name={country2Name}
-          stroke={country2Color}
-          strokeWidth={3}
-          fillOpacity={1}
-          fill="url(#color2)"
-        />
-        <Area
-          type="monotone"
-          dataKey="country3"
-          name={country3Name}
-          stroke={country3Color}
-          strokeWidth={3}
-          fillOpacity={1}
-          fill="url(#color3)"
-        />
-      </AreaChart>
-    </ResponsiveContainer>
+    <>
+      <h1 className="mb-3 ml-[0.5%] text-4xl text-[#1e3a8a]">Monthly Core Inflation</h1>
+      <ResponsiveContainer width="99%" height="100%">
+        <AreaChart data={data} className="ml-[0.5%]">
+          <defs>
+            <linearGradient id="color1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="100%" stopColor={country1Color} stopOpacity={1} />
+              <stop offset="100%" stopColor={country1Color} stopOpacity={0} />
+            </linearGradient>
+            <linearGradient id="color2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={country2Color} stopOpacity={1} />
+              <stop offset="80%" stopColor={country2Color} stopOpacity={0} />
+            </linearGradient>
+            <linearGradient id="color3" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={country3Color} stopOpacity={1} />
+              <stop offset="80%" stopColor={country3Color} stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <Legend
+            verticalAlign="top"
+            height={36}
+            align="left"
+            iconType="circle"
+            iconSize={20}
+          />
+          <XAxis
+            dataKey="name"
+            stroke={textColor}
+            tick={{ fontSize: 18 }}
+            interval={0}
+            padding={{ left: 10, right: 10 }}
+          />
+          <YAxis hide={true} />
+          <CartesianGrid
+            stroke={textColor}
+            strokeDasharray="5 5"
+            vertical={false}
+          />
+          <Tooltip />
+          <Area
+            type="monotone"
+            dataKey="country1"
+            name={country1Name}
+            stroke={country1Color}
+            fillOpacity={1}
+            fill="url(#color1)"
+          />
+          <Area
+            type="monotone"
+            dataKey="country2"
+            name={country2Name}
+            stroke={country2Color}
+            strokeWidth={3}
+            fillOpacity={1}
+            fill="url(#color2)"
+          />
+          <Area
+            type="monotone"
+            dataKey="country3"
+            name={country3Name}
+            stroke={country3Color}
+            strokeWidth={3}
+            fillOpacity={1}
+            fill="url(#color3)"
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </>
   );
 };
 

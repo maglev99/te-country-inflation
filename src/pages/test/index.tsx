@@ -51,6 +51,10 @@ const countries = ["China", "Japan", "South Korea"];
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
+  // breakpoint values hardcoded due to issue with plugin AreaChart component not taking up full width on larger screen sizes
+  const screenWidthBreakPoints =
+    "w-full md:w-[736px] lg:w-[992px] xl:w-[1257px]";
+
   return (
     <>
       <Head>
@@ -60,12 +64,25 @@ const Home: NextPage = () => {
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#a5cefc] to-[#2563eb]">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-          <h1 className="text-5xl font-extrabold tracking-tight text-blue-900 sm:text-[5rem]">
+          <h1
+            className={`-mt-[20px] text-5xl font-extrabold tracking-tight text-blue-900 sm:text-[5rem] ${screenWidthBreakPoints} `}
+          >
             US <span className="text-[#e14f4f]">vs</span> Asia Inflation
           </h1>
 
-          <Dropdown options={countries} initialSelectedItemIndex={0}/>
-          <Dropdown options={countries} initialSelectedItemIndex={1}/>
+          <div
+            className={`inline-flex ${screenWidthBreakPoints} -mb-[45px] -mt-[40px] justify-start md:ml-4 `}
+          >
+            <h3 className="text-2xl text-blue-900">Countries to compare</h3>
+          </div>
+
+          <div
+            className={`inline-flex ${screenWidthBreakPoints} -mb-[20px] justify-start `}
+          >
+            <Dropdown options={countries} initialSelectedItemIndex={0} />
+            <Dropdown options={countries} initialSelectedItemIndex={1} />
+          </div>
+
           {/* <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
             <Link
               className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
@@ -91,14 +108,24 @@ const Home: NextPage = () => {
             </Link>
           </div> */}
 
-          {/* breakpoint values hardcoded due to issue with plugin AreaChart component not taking up full width on larger screen sizes */}
-          <div className="flex w-full bg-blue-800 md:w-[736px] lg:w-[992px] xl:w-[1257px]">
-            {/* <CountryInflationCard countryName="United States" data={data1} /> */}
-            <div className=" w-full rounded-3xl bg-neutral-50 md:mx-[12px]">
-              <div className="my-[30px] h-[400px] px-[10px]">
+          <div
+            className={`inline-flex ${screenWidthBreakPoints} -mb-[35px]  justify-start md:ml-4 `}
+          >
+            <h3 className="text-2xl text-blue-900">Jan 2023 - Jun 2023</h3>
+          </div>
+
+          <div className={`flex w-full ${screenWidthBreakPoints}`}>
+            <div className=" w-full rounded-3xl bg-neutral-50 pb-[45px] md:mx-[12px]">
+              <div className="my-[30px] h-[300px] px-[10px]">
                 <InflationAreaChart />
               </div>
             </div>
+          </div>
+
+          <div
+            className={`inline-flex ${screenWidthBreakPoints} -mt-[10px] -mb-[40px]  justify-start md:ml-4 `}
+          >
+            <h3 className="text-2xl text-blue-900">Jun 2023</h3>
           </div>
 
           <div className="mt-[5px] flex flex-wrap bg-blue-900">
