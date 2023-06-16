@@ -3,7 +3,10 @@ import Head from "next/head";
 import Link from "next/link";
 import { api } from "~/utils/api";
 
-import TestBarChart from "~/components/TestBarChart";
+import InflationBarChart from "~/components/InflationBarChart";
+import InflationAreaChart from "~/components/InflationAreaChart";
+
+import Dropdown from "~/components/ui/Dropdown";
 
 const data1 = [
   { name: "Core 4%", Percentage: 4 },
@@ -36,12 +39,14 @@ const CountryInflationCard = ({
     <div className="mb-[50px] w-full sm:w-full md:w-1/2 md:px-3 lg:w-1/2 xl:w-1/3">
       <div className="rounded-3xl bg-neutral-50 pb-[70px] pt-[30px]">
         <div className="h-[300px] px-[10px] xl:w-[395px]">
-          <TestBarChart countryName={countryName} data={data} />
+          <InflationBarChart countryName={countryName} data={data} />
         </div>
       </div>
     </div>
   );
 };
+
+const countries = ["China", "Japan", "South Korea"];
 
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
@@ -58,6 +63,9 @@ const Home: NextPage = () => {
           <h1 className="text-5xl font-extrabold tracking-tight text-blue-900 sm:text-[5rem]">
             US <span className="text-[#e14f4f]">vs</span> Asia Inflation
           </h1>
+
+          <Dropdown options={countries} initialSelectedItemIndex={0}/>
+          <Dropdown options={countries} initialSelectedItemIndex={1}/>
           {/* <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
             <Link
               className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
@@ -83,7 +91,17 @@ const Home: NextPage = () => {
             </Link>
           </div> */}
 
-          <div className="flex flex-wrap">
+          {/* breakpoint values hardcoded due to issue with plugin AreaChart component not taking up full width on larger screen sizes */}
+          <div className="flex w-full bg-blue-800 md:w-[736px] lg:w-[992px] xl:w-[1257px]">
+            {/* <CountryInflationCard countryName="United States" data={data1} /> */}
+            <div className=" w-full rounded-3xl bg-neutral-50 md:mx-[12px]">
+              <div className="my-[30px] h-[400px] px-[10px]">
+                <InflationAreaChart />
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-[5px] flex flex-wrap bg-blue-900">
             <CountryInflationCard countryName="United States" data={data1} />
             <CountryInflationCard countryName="United States" data={data2} />
             <CountryInflationCard countryName="United States" data={data3} />

@@ -15,7 +15,7 @@ interface Props {
   data: { name: string; Percentage: number }[];
 }
 
-const TestBarChart = ({ countryName, data }: Props) => {
+const InflationBarChart = ({ countryName, data }: Props) => {
   const xAxisTickFormatter = (value: number) => `${value}%`;
 
   // type TooltipValueFormatter = (value: string | "") => [string, string];
@@ -25,16 +25,14 @@ const TestBarChart = ({ countryName, data }: Props) => {
 
   return (
     <>
-    <h1 className={`text-4xl text-[${textColor}] ml-[0.5%] mb-2`}>{countryName}</h1>
-    {/* set responsive container width to 99% to trigger redraw so that graph shrinks properly in smallest browser window widths */}
-      <ResponsiveContainer width="99%" height="100%"> 
-        <BarChart
-          data={data}
-          layout="vertical"
-          className="ml-[0.5%]"
-        >
+      <h1 className="text-4xl text-[#1e3a8a] mb-2 ml-[0.5%]">
+        {countryName}
+      </h1>
+      {/* set responsive container width to 99% to trigger redraw so that graph shrinks properly in smallest browser window widths */}
+      <ResponsiveContainer width="99%" height="100%">
+        <BarChart data={data} layout="vertical" className="ml-[0.5%]">
           <defs>
-            <linearGradient id="colorUv" x1="1.3" y1="1" x2="0" y2="1">
+            <linearGradient id="inflationBarGradient" x1="1.3" y1="1" x2="0" y2="1">
               <stop offset="20%" stopColor="#e71414" stopOpacity={1} />
               <stop offset="90%" stopColor="orange" stopOpacity={1} />
             </linearGradient>
@@ -44,11 +42,16 @@ const TestBarChart = ({ countryName, data }: Props) => {
             type="number"
             stroke={textColor}
             tickFormatter={xAxisTickFormatter}
-            tick={{ fontSize: 18 }}
+            tick={{ fontSize: 18 }}      
           />
-          <YAxis dataKey="name" type="category" stroke={textColor} hide={true} />
+          <YAxis
+            dataKey="name"
+            type="category"
+            stroke={textColor}
+            hide={true}
+          />
           {/* <Tooltip formatter={tooltipFormatter} /> */}
-          <Bar dataKey="Percentage" fill="url(#colorUv)">
+          <Bar dataKey="Percentage" fill="url(#inflationBarGradient)">
             <LabelList
               dataKey="name"
               position="insideLeft"
@@ -77,4 +80,4 @@ const TestBarChart = ({ countryName, data }: Props) => {
   );
 };
 
-export default TestBarChart;
+export default InflationBarChart;
