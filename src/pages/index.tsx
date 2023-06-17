@@ -54,7 +54,7 @@ const ExchangeRateCard = ({}) => {
     <div className="mb-[50px] w-full sm:w-full md:w-1/2 md:px-3 lg:w-1/2 xl:w-1/3">
       <div className="rounded-3xl bg-neutral-50 pb-[70px] pt-[30px]">
         <div className="flex h-[80px] min-w-[371px] items-center justify-center px-[10px] xl:w-[395px]">
-          <h3 className=" mt-[40px] text-[50px]">1.00 USD</h3>
+          <h3 className="mt-[40px] text-[40px] text-[#1e3a8a]">1.00 USD</h3>
         </div>
       </div>
     </div>
