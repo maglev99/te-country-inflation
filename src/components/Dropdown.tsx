@@ -2,17 +2,19 @@ import React, { useState, useEffect, useRef } from "react";
 
 interface DropdownProps {
   options: string[];
-  initialSelectedItemIndex?: number;
+  selectedOptions: string[];
+  setSelectedOptions: React.Dispatch<React.SetStateAction<string[]>>;
+  index: number; // determines which item in countries array to refer to and change
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
   options,
-  initialSelectedItemIndex = 0,
+  selectedOptions,
+  setSelectedOptions,
+  index,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(
-    options[initialSelectedItemIndex]
-  );
+  const [selectedItem, setSelectedItem] = useState(options[index]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = () => {
@@ -21,11 +23,17 @@ const Dropdown: React.FC<DropdownProps> = ({
 
   const handleItemClick = (item: string) => {
     setSelectedItem(item);
+
+    // update dropdown with new options
+    const newOptions = [...selectedOptions]; // create copy of selectedOptions array
+    newOptions[index] = item;
+    setSelectedOptions(newOptions);
+
     setIsDropdownOpen(false);
   };
 
   useEffect(() => {
-		// close dropdown if user clicks outside the expanded menu area
+    // close dropdown if user clicks outside the expanded menu area
     const handleOutsideClick = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
@@ -46,7 +54,7 @@ const Dropdown: React.FC<DropdownProps> = ({
 
   return (
     <div className="min-w-screen flex flex-row justify-center ">
-      <div className="relative py-2 md:pl-2 pr-3" ref={dropdownRef}>
+      <div className="relative py-2 pr-3 md:pl-2" ref={dropdownRef}>
         <button
           onClick={toggleDropdown}
           className={`flex ${buttonWidth} flex-row justify-between rounded-2xl border-2 border-white bg-white px-2 py-3 text-blue-900 
@@ -83,14 +91,16 @@ const Dropdown: React.FC<DropdownProps> = ({
           )}
         </button>
         {isDropdownOpen && (
-          <div className={`absolute z-10 mt-2 ${buttonWidth} rounded-2xl bg-white py-2 shadow-xl`}>
+          <div
+            className={`absolute z-10 mt-2 ${buttonWidth} rounded-2xl bg-white py-2 shadow-xl`}
+          >
             {options.map((option) => (
               <button
                 key={option}
                 className={`block w-full px-4 py-3 text-left ${
                   selectedItem === option
-                    ? "bg-blue-900 text-white rounded-xl"
-                    : "hover:bg-blue-900 text-blue-900 rounded-xl hover:text-white"
+                    ? "rounded-xl bg-blue-900 text-white"
+                    : "rounded-xl text-blue-900 hover:bg-blue-900 hover:text-white"
                 }`}
                 onClick={() => handleItemClick(option)}
               >

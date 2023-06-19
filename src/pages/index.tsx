@@ -2,10 +2,11 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { api } from "~/utils/api";
 
-import InflationBarChart from "~/components/InflationBarChart";
-import InflationAreaChart from "~/components/InflationAreaChart";
+import Dropdown from "~/components/Dropdown";
 
-import Dropdown from "~/components/ui/Dropdown";
+import MonthlyCoreInflationCard from "~/components/monthly-core-inflation/MonthlyCoreInflationCard";
+import CountryInflationCard from "~/components/country-inflation/CountryInflationCard";
+import GasPriceCard from "~/components/gas-prices/GasPriceCard";
 
 import Footer from "~/components/Footer";
 
@@ -26,55 +27,17 @@ const data3 = [
   { name: "Food 9%", Percentage: 9 },
 ];
 
-interface CountryInflationCardProps {
-  countryName: string;
-  data: { name: string; Percentage: number }[];
-}
-
-const CountryInflationCard = ({
-  countryName,
-  data,
-}: CountryInflationCardProps) => {
-  return (
-    <div className="mb-[50px] w-full sm:w-full md:w-1/2 md:px-3 lg:w-1/2 xl:w-1/3">
-      <div className="rounded-3xl bg-neutral-50 pb-[70px] pt-[30px]">
-        <div className="h-[200px] px-[10px] xl:w-[395px]">
-          <InflationBarChart countryName={countryName} data={data} />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const GasPriceCard = ({}) => {
-  return (
-    <div className="mb-[50px] w-full sm:w-full md:w-1/2 md:px-3 lg:w-1/2 xl:w-1/3">
-      <div className="rounded-3xl bg-neutral-50 pb-[62px] pt-[30px]">
-        <div className="flex-row h-[80px] min-w-[371px] items-center justify-center px-[10px] xl:w-[395px]">
-          <h1 className="ml-[0.5%] text-3xl text-[#1e3a8a]">
-            United States
-          </h1>
-          <div className="ml-[0.5%]">
-            <h5 className="mt-[10px] text-start text-[18px] text-[#1e3a8a]">
-              May 2023
-            </h5>
-            <h3 className="text-3xl text-[#1e3a8a]">1.00 USD/L</h3>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const countries = ["Mexico", "Sweden", "Thailand"];
 
 const Home: NextPage = () => {
   const elementRef = useRef<HTMLDivElement>(null);
   const [isSticky, setIsSticky] = useState(false);
+  const [selectedCountries, setSelectedCountries] = useState([...countries]); //create a copy of countries array
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   const { data, isLoading, error } = api.teRouter.getData.useQuery();
 
+  // handle sticker country selection bar when scroll
   useEffect(() => {
     const handleScroll = () => {
       const element = elementRef.current;
@@ -91,6 +54,20 @@ const Home: NextPage = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  // handle data changes
+  useEffect(() => {
+    if (data) {
+      console.log("data changed", data);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
+  // handle select country dropdown changes
+  useEffect(() => {
+    console.log("selected countries changed", selectedCountries);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCountries]);
 
   // const hello = api.example.hello.useQuery({ text: "from tRPC" });
   // const test = api.test.displayTest.useQuery({ text: "from tRPC" });
@@ -144,9 +121,27 @@ const Home: NextPage = () => {
             <div
               className={`inline-flex ${screenWidthBreakPoints} -mb-[20px] justify-start md:ml-0.5 `}
             >
-              <Dropdown options={countries} initialSelectedItemIndex={0} />
-              <Dropdown options={countries} initialSelectedItemIndex={1} />
-              <Dropdown options={countries} initialSelectedItemIndex={2} />
+              <Dropdown
+                key={"dropdown-0"}
+                options={countries}
+                selectedOptions={selectedCountries}
+                setSelectedOptions={setSelectedCountries}
+                index={0}
+              />
+              <Dropdown
+                key={"dropdown-1"}
+                options={countries}
+                selectedOptions={selectedCountries}
+                setSelectedOptions={setSelectedCountries}
+                index={1}
+              />
+              <Dropdown
+                key={"dropdown-2"}
+                options={countries}
+                selectedOptions={selectedCountries}
+                setSelectedOptions={setSelectedCountries}
+                index={2}
+              />
             </div>
           </div>
 
@@ -157,11 +152,7 @@ const Home: NextPage = () => {
           </div>
 
           <div className={`flex w-full ${screenWidthBreakPoints}`}>
-            <div className=" w-full rounded-3xl bg-neutral-50 pb-[45px] md:mx-[12px]">
-              <div className="my-[30px] h-[300px] px-[10px]">
-                <InflationAreaChart />
-              </div>
-            </div>
+            <MonthlyCoreInflationCard />
           </div>
 
           <div
@@ -197,9 +188,9 @@ const Home: NextPage = () => {
             {test.data ? test.data.display : "Loading tRPC query..."}
           </p> */}
 
-          {/* <p className="mt-20 text-2xl text-neutral-50">
+          <p className="mt-20 text-2xl text-neutral-50">
             {data ? JSON.stringify(data) : "Loading tRPC query..."}
-          </p> */}
+          </p>
         </div>
       </main>
     </>
