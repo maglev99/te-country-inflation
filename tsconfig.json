@@ -27,7 +27,9 @@
     "**/*.ts",
     "**/*.tsx",
     "**/*.cjs",
-    "**/*.mjs"
+    "**/*.mjs",
+    "src/utils/te.ts",
+    "typings/*.d.ts"
   ],
   "exclude": ["node_modules"]
 }

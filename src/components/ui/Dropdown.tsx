@@ -42,7 +42,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     };
   }, []);
 
-  const buttonWidth = "w-[160px]";
+  const buttonWidth = "w-[110px]";
 
   return (
     <div className="min-w-screen flex flex-row justify-center ">
@@ -52,7 +52,7 @@ const Dropdown: React.FC<DropdownProps> = ({
           className={`flex ${buttonWidth} flex-row justify-between rounded-2xl border-2 border-white bg-white px-2 py-3 text-blue-900 
           focus:outline-none`}
         >
-          <span className="select-none">{selectedItem}</span>
+          <span className="select-none truncate">{selectedItem}</span>
 
           {isDropdownOpen ? (
             <svg

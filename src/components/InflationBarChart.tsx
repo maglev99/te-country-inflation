@@ -7,7 +7,6 @@ import {
   XAxis,
   YAxis,
   LabelList,
-  // Tooltip,
 } from "recharts";
 
 interface Props {
@@ -17,9 +16,6 @@ interface Props {
 
 const InflationBarChart = ({ countryName, data }: Props) => {
   const xAxisTickFormatter = (value: number) => `${value}%`;
-
-  // type TooltipValueFormatter = (value: string | "") => [string, string];
-  // const tooltipFormatter: TooltipValueFormatter = (value) => [`${value}%`, ""];
 
   const textColor = "#1e3a8a";
 
