@@ -12,6 +12,15 @@ import Footer from "~/components/Footer";
 
 import { useEffect, useRef, useState } from "react";
 
+import { filterData } from "~/utils/datafilter";
+
+import {
+  getFirstDayOfSixMonthsAgo,
+  getLastDayOfPreviousMonth,
+  formatDateToMonthAndYear,
+} from "~/utils/date";
+import { type DataObject } from "~/Types/Data";
+
 const data1 = [
   { name: "Core 4%", Percentage: 4 },
   { name: "Food 3%", Percentage: 3 },
@@ -27,15 +36,40 @@ const data3 = [
   { name: "Food 9%", Percentage: 9 },
 ];
 
-const countries = ["Mexico", "Sweden", "Thailand"];
+const countries = ["Sweden", "Mexico", "Thailand"];
+const categories = ["Core Inflation Rate", "Food Inflation", "Gasoline Prices"];
 
 const Home: NextPage = () => {
   const elementRef = useRef<HTMLDivElement>(null);
   const [isSticky, setIsSticky] = useState(false);
   const [selectedCountries, setSelectedCountries] = useState([...countries]); //create a copy of countries array
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-  const { data, isLoading, error } = api.teRouter.getData.useQuery();
+  const [coreInflationData, setCoreInflationData] = useState<{
+    [key: string]: DataObject[];
+  }>({});
+
+  const [foodInflationData, setFoodInflationData] = useState<{
+    [key: string]: DataObject[];
+  }>({});
+
+  const [gasPricesData, setGasPricesData] = useState<{
+    [key: string]: DataObject[];
+  }>({});
+
+  // start and end range of data to be fetched
+  const rangeStart = getFirstDayOfSixMonthsAgo();
+  console.log(rangeStart);
+  const rangeEnd = getLastDayOfPreviousMonth();
+
+  const { data, isLoading, error } = api.teRouter.getData.useQuery({
+    country1: countries[0] || "",
+    country2: countries[1] || "",
+    country3: countries[2] || "",
+    rangeStart,
+    rangeEnd,
+  });
+
+  const [formattedData, setFormattedData] = useState(null);
 
   // handle sticker country selection bar when scroll
   useEffect(() => {
@@ -59,9 +93,32 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (data) {
       console.log("data changed", data);
+
+      // set items from data
+      setCoreInflationData(
+        filterData(categories[0] || "", countries, data.data)
+      );
+
+      setFoodInflationData(
+        filterData(categories[1] || "", countries, data.data)
+      );
+
+      setGasPricesData(filterData(categories[2] || "", countries, data.data));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
+
+  useEffect(() => {
+    console.log("core inflation data", coreInflationData);
+  }, [coreInflationData]);
+
+  useEffect(() => {
+    console.log("food inflation data", foodInflationData);
+  }, [foodInflationData]);
+
+  useEffect(() => {
+    console.log("gas prices data", gasPricesData);
+  }, [gasPricesData]);
 
   // handle select country dropdown changes
   useEffect(() => {
@@ -148,17 +205,26 @@ const Home: NextPage = () => {
           <div
             className={`inline-flex ${screenWidthBreakPoints} -mb-[35px] justify-start md:ml-4 `}
           >
-            <h3 className="text-2xl text-blue-900">Jan 2023 - Jun 2023</h3>
+            <h3 className="text-2xl text-blue-900">
+              {formatDateToMonthAndYear(rangeStart)} -{" "}
+              {formatDateToMonthAndYear(rangeEnd)}
+            </h3>
           </div>
 
           <div className={`flex w-full ${screenWidthBreakPoints}`}>
-            <MonthlyCoreInflationCard />
+            <MonthlyCoreInflationCard
+              isLoading={isLoading}
+              selectedCountries={selectedCountries}
+              data={coreInflationData}
+            />
           </div>
 
           <div
             className={`inline-flex ${screenWidthBreakPoints} -mb-[40px] -mt-[10px] justify-start md:ml-4 `}
           >
-            <h3 className="text-2xl text-blue-900">Jun 2023</h3>
+            <h3 className="text-2xl text-blue-900">
+              {formatDateToMonthAndYear(rangeEnd)}
+            </h3>
           </div>
 
           <div className="mt-[5px] flex flex-wrap">
@@ -188,9 +254,9 @@ const Home: NextPage = () => {
             {test.data ? test.data.display : "Loading tRPC query..."}
           </p> */}
 
-          <p className="mt-20 text-2xl text-neutral-50">
+          {/* <p className="mt-20 text-2xl text-neutral-50">
             {data ? JSON.stringify(data) : "Loading tRPC query..."}
-          </p>
+          </p> */}
         </div>
       </main>
     </>

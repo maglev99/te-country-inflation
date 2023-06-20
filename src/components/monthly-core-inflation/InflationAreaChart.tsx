@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React from "react";
 
 import {
@@ -11,61 +12,34 @@ import {
   Legend,
 } from "recharts";
 
-const data = [
-  {
-    name: "Jan",
-    country1: 4000,
-    country2: 2400,
-    country3: 2400,
-  },
-  {
-    name: "Feb",
-    country1: 3000,
-    country2: 1398,
-    country3: 2210,
-  },
-  {
-    name: "Mar",
-    country1: 2000,
-    country2: 9800,
-    country3: 7290,
-  },
-  {
-    name: "Apr",
-    country1: 2780,
-    country2: 3908,
-    country3: 2000,
-  },
-  {
-    name: "May",
-    country1: 1890,
-    country2: 4800,
-    country3: 2181,
-  },
-  {
-    name: "Jun",
-    country1: 2390,
-    country2: 3800,
-    country3: 2500,
-  },
-];
+import { type MonthlyInflationData } from "~/Types/Data";
 
-const InflationAreaChart = () => {
+interface Props {
+  selectedCountries: string[];
+  data: MonthlyInflationData[];
+}
+
+const InflationAreaChart = ({ selectedCountries, data }: Props) => {
   const textColor = "#1e3a8a";
-
-  // country names
-  const country1Name = "US";
-  const country2Name = "China";
-  const country3Name = "Japan";
 
   // country colors
   const country1Color = "#1e3a8a";
   const country2Color = "orange";
   const country3Color = "red";
 
+  // formatter to attach "%" at end if value is a number
+  const tooltipFormatter = (value: number | string) => {
+    if (typeof value === 'number') {
+      return `${value}%`;
+    }
+    return value;
+  };
+  
   return (
     <>
-      <h1 className="mb-3 ml-[0.5%] text-4xl text-[#1e3a8a]">Monthly Core Inflation</h1>
+      <h1 className="mb-3 ml-[0.5%] text-4xl text-[#1e3a8a]">
+        Monthly Core Inflation
+      </h1>
       <ResponsiveContainer width="99%" height="100%">
         <AreaChart data={data} className="ml-[0.5%]">
           <defs>
@@ -90,23 +64,23 @@ const InflationAreaChart = () => {
             iconSize={20}
           />
           <XAxis
-            dataKey="name"
+            dataKey="month"
             stroke={textColor}
             tick={{ fontSize: 18 }}
             interval={0}
             padding={{ left: 10, right: 10 }}
           />
-          <YAxis hide={true} />
+          <YAxis width={24} stroke={textColor} />
           <CartesianGrid
             stroke={textColor}
             strokeDasharray="5 5"
             vertical={false}
           />
-          <Tooltip />
+          <Tooltip formatter={tooltipFormatter} />
           <Area
             type="monotone"
             dataKey="country1"
-            name={country1Name}
+            name={selectedCountries[0]}
             stroke={country1Color}
             fillOpacity={1}
             fill="url(#color1)"
@@ -114,7 +88,7 @@ const InflationAreaChart = () => {
           <Area
             type="monotone"
             dataKey="country2"
-            name={country2Name}
+            name={selectedCountries[1]}
             stroke={country2Color}
             strokeWidth={3}
             fillOpacity={1}
@@ -123,7 +97,7 @@ const InflationAreaChart = () => {
           <Area
             type="monotone"
             dataKey="country3"
-            name={country3Name}
+            name={selectedCountries[2]}
             stroke={country3Color}
             strokeWidth={3}
             fillOpacity={1}

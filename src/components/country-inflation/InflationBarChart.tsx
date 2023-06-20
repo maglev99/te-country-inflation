@@ -46,7 +46,6 @@ const InflationBarChart = ({ countryName, data }: Props) => {
             stroke={textColor}
             hide={true}
           />
-          {/* <Tooltip formatter={tooltipFormatter} /> */}
           <Bar dataKey="Percentage" fill="url(#inflationBarGradient)">
             <LabelList
               dataKey="name"

@@ -5,58 +5,42 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
-// formats date in the form "YYYY-MM-DD"
-function formatDate(date: Date): string {
-  return date.toISOString().split("T")[0] || "";
-}
+import { type Data } from "~/Types/Data";
 
 export const teRouter = createTRPCRouter({
-  getData: publicProcedure.query(async () => {
-    const headers = {
-      Accept: "Application/xml",
-      Authorization: `Client ${process.env.TE_API_KEY || ""}`,
-    };
+  getData: publicProcedure
+    .input(
+      z.object({
+        country1: z.string(),
+        country2: z.string(),
+        country3: z.string(),
+        rangeStart: z.string(),
+        rangeEnd: z.string(),
+      })
+    )
+    .query(async ({ input }) => {
+      const headers = {
+        Accept: "Application/xml",
+        Authorization: `Client ${process.env.TE_API_KEY || ""}`,
+      };
 
-    // Get the last day of the previous month
-    const currentDate = new Date();
-    const lastDayOfPreviousMonth = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      0
-    );
+      const path =
+        `/historical/country/${input.country1.toLowerCase()}, ${input.country2.toLowerCase()}, ${input.country3.toLowerCase()}/indicator/core inflation rate, food inflation, gasoline prices/${
+          input.rangeStart
+        }/${input.rangeEnd}`.replace(" ", "%20");
 
-    const formattedLastDayOfPreviousMonth = formatDate(lastDayOfPreviousMonth)
+      const response = await fetch(`https://api.tradingeconomics.com${path}`, {
+        headers,
+      });
 
-    // Get the first day of 6 months ago
-    const sixMonthsAgo = new Date();
-    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-    const firstDayOfSixMonthsAgo = new Date(
-      sixMonthsAgo.getFullYear(),
-      sixMonthsAgo.getMonth(),
-      1
-    );
+      const responseData = await response.text();
+      // console.log("Response:", responseData);
 
-    const formattedFirstDayOfSixMonthsAgo = formatDate(firstDayOfSixMonthsAgo)
-
-    console.log(formattedLastDayOfPreviousMonth);
-    console.log(formattedFirstDayOfSixMonthsAgo);
-
-    const path =
-      `/historical/country/mexico, sweden, thailand/indicator/core inflation rate, food inflation, gasoline prices/${
-        formattedFirstDayOfSixMonthsAgo || ""
-      }/${formattedLastDayOfPreviousMonth || ""}`.replace(" ", "%20");
-    const response = await fetch(`https://api.tradingeconomics.com${path}`, {
-      headers,
-    });
-
-    const responseData = await response.text();
-    console.log("Response:", responseData);
-
-    try {
-      const data = JSON.parse(responseData);
-      return { data };
-    } catch (error) {
-      throw new Error("Failed to parse JSON response");
-    }
-  }),
+      try {
+        const data = JSON.parse(responseData);
+        return { data } as Data;
+      } catch (error) {
+        throw new Error("Failed to parse JSON response");
+      }
+    }),
 });
