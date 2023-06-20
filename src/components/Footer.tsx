@@ -4,7 +4,7 @@ const Footer = () => (
   <>
     <div className="-mb-[105px] mt-[50px]">
       <a
-        href="https://github.com"
+        href="https://github.com/maglev99/te-country-inflation"
         target="_blank"
         rel="noopener noreferrer"
         className="flex items-center justify-center"

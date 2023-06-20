@@ -2,6 +2,8 @@
 
 This app compares the Core Inflation, Food Inflation and Gas Prices of 3 countries using data from the Trading Economics API
 
+Visit deployed app at [https://te-country-inflation.vercel.app/](https://te-country-inflation.vercel.app/)
+
 ## Installation
 
 Clone repo locally and run `npm install` to install packages
