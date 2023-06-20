@@ -11,7 +11,7 @@ import {
 
 interface Props {
   countryName: string;
-  data: { name: string; Percentage: number }[];
+  data: { label: string; percentage: number }[];
 }
 
 const InflationBarChart = ({ countryName, data }: Props) => {
@@ -41,14 +41,14 @@ const InflationBarChart = ({ countryName, data }: Props) => {
             tick={{ fontSize: 18 }}      
           />
           <YAxis
-            dataKey="name"
+            dataKey="label"
             type="category"
             stroke={textColor}
             hide={true}
           />
-          <Bar dataKey="Percentage" fill="url(#inflationBarGradient)">
+          <Bar dataKey="percentage" fill="url(#inflationBarGradient)">
             <LabelList
-              dataKey="name"
+              dataKey="label"
               position="insideLeft"
               fill="#FFFFFF"
               content={({ x, y, value, height }) => (
@@ -60,7 +60,7 @@ const InflationBarChart = ({ countryName, data }: Props) => {
                       : undefined
                   }
                   fontSize={35}
-                  fill="#FFFFFF"
+                  fill="#fafafa"
                   textAnchor="start"
                   fontFamily="Helvetica, sans-serif"
                 >

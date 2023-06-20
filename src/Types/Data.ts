@@ -19,3 +19,13 @@ export interface MonthlyInflationData {
   country2: number;
   country3: number;
 }
+
+export interface CountryInflationData {
+  label: string;
+  percentage: number;
+}
+
+export interface GasPriceData {
+  date: string;
+  value: number;
+}

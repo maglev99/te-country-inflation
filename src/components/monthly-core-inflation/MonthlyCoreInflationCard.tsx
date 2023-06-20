@@ -55,10 +55,7 @@ const MonthlyCoreInflationCard = ({
   // update chart data when changed
   useEffect(() => {
     setChartData(formatChartData(selectedCountries, data));
-    console.log("chartData", formatChartData(selectedCountries, data));
   }, [selectedCountries, data]);
-
-  console.log(data);
 
   return (
     <div className=" w-full rounded-3xl bg-neutral-50 pb-[45px] md:mx-[12px]">

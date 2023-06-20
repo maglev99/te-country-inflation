@@ -11,7 +11,6 @@ import GasPriceCard from "~/components/gas-prices/GasPriceCard";
 import Footer from "~/components/Footer";
 
 import { useEffect, useRef, useState } from "react";
-
 import { filterData } from "~/utils/datafilter";
 
 import {
@@ -20,21 +19,6 @@ import {
   formatDateToMonthAndYear,
 } from "~/utils/date";
 import { type DataObject } from "~/Types/Data";
-
-const data1 = [
-  { name: "Core 4%", Percentage: 4 },
-  { name: "Food 3%", Percentage: 3 },
-];
-
-const data2 = [
-  { name: "Core 5%", Percentage: 5 },
-  { name: "Food 6%", Percentage: 6 },
-];
-
-const data3 = [
-  { name: "Core 8%", Percentage: 8 },
-  { name: "Food 9%", Percentage: 9 },
-];
 
 const countries = ["Sweden", "Mexico", "Thailand"];
 const categories = ["Core Inflation Rate", "Food Inflation", "Gasoline Prices"];
@@ -58,10 +42,9 @@ const Home: NextPage = () => {
 
   // start and end range of data to be fetched
   const rangeStart = getFirstDayOfSixMonthsAgo();
-  console.log(rangeStart);
   const rangeEnd = getLastDayOfPreviousMonth();
 
-  const { data, isLoading, error } = api.teRouter.getData.useQuery({
+  const { data, isLoading } = api.teRouter.getData.useQuery({
     country1: countries[0] || "",
     country2: countries[1] || "",
     country3: countries[2] || "",
@@ -69,9 +52,7 @@ const Home: NextPage = () => {
     rangeEnd,
   });
 
-  const [formattedData, setFormattedData] = useState(null);
-
-  // handle sticker country selection bar when scroll
+  // handle sticky country selection bar when scroll
   useEffect(() => {
     const handleScroll = () => {
       const element = elementRef.current;
@@ -92,8 +73,6 @@ const Home: NextPage = () => {
   // handle data changes
   useEffect(() => {
     if (data) {
-      console.log("data changed", data);
-
       // set items from data
       setCoreInflationData(
         filterData(categories[0] || "", countries, data.data)
@@ -107,27 +86,6 @@ const Home: NextPage = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
-
-  useEffect(() => {
-    console.log("core inflation data", coreInflationData);
-  }, [coreInflationData]);
-
-  useEffect(() => {
-    console.log("food inflation data", foodInflationData);
-  }, [foodInflationData]);
-
-  useEffect(() => {
-    console.log("gas prices data", gasPricesData);
-  }, [gasPricesData]);
-
-  // handle select country dropdown changes
-  useEffect(() => {
-    console.log("selected countries changed", selectedCountries);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCountries]);
-
-  // const hello = api.example.hello.useQuery({ text: "from tRPC" });
-  // const test = api.test.displayTest.useQuery({ text: "from tRPC" });
 
   // breakpoint values hardcoded due to issue with plugin AreaChart component not taking up full width on larger screen sizes
   const screenWidthBreakPoints =
@@ -228,35 +186,51 @@ const Home: NextPage = () => {
           </div>
 
           <div className="mt-[5px] flex flex-wrap">
-            <CountryInflationCard countryName="United States" data={data1} />
-            <CountryInflationCard countryName="United States" data={data2} />
-            <CountryInflationCard countryName="United States" data={data3} />
+            <CountryInflationCard
+              isLoading={isLoading}
+              countryName={selectedCountries[0] ?? ""}
+              coreInflationData={coreInflationData}
+              foodInflationData={foodInflationData}
+            />
+            <CountryInflationCard
+              isLoading={isLoading}
+              countryName={selectedCountries[1] ?? ""}
+              coreInflationData={coreInflationData}
+              foodInflationData={foodInflationData}
+            />
+            <CountryInflationCard
+              isLoading={isLoading}
+              countryName={selectedCountries[2] ?? ""}
+              coreInflationData={coreInflationData}
+              foodInflationData={foodInflationData}
+            />
           </div>
 
           <div
             className={`inline-flex ${screenWidthBreakPoints} -mb-[40px] -mt-[60px] justify-start md:ml-4 `}
           >
-            <h3 className="text-2xl text-blue-900">Gas Prices</h3>
+            <h3 className="text-2xl text-blue-900">Latest Gas Prices</h3>
           </div>
 
           <div className="mt-[5px] flex flex-wrap">
-            <GasPriceCard />
-            <GasPriceCard />
-            <GasPriceCard />
+            <GasPriceCard
+              isLoading={isLoading}
+              countryName={selectedCountries[0] ?? ""}
+              gasPriceData={gasPricesData}
+            />
+            <GasPriceCard
+              isLoading={isLoading}
+              countryName={selectedCountries[1] ?? ""}
+              gasPriceData={gasPricesData}
+            />
+            <GasPriceCard
+              isLoading={isLoading}
+              countryName={selectedCountries[2] ?? ""}
+              gasPriceData={gasPricesData}
+            />
           </div>
 
           <Footer />
-
-          {/* <p className="mt-20 text-2xl text-neutral-50">
-            {hello.data ? hello.data.greeting : "Loading tRPC query..."}
-          </p>
-          <p className="mt-20 text-2xl text-neutral-50">
-            {test.data ? test.data.display : "Loading tRPC query..."}
-          </p> */}
-
-          {/* <p className="mt-20 text-2xl text-neutral-50">
-            {data ? JSON.stringify(data) : "Loading tRPC query..."}
-          </p> */}
         </div>
       </main>
     </>

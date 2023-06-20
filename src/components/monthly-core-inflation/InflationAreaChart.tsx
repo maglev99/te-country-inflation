@@ -68,7 +68,7 @@ const InflationAreaChart = ({ selectedCountries, data }: Props) => {
             stroke={textColor}
             tick={{ fontSize: 18 }}
             interval={0}
-            padding={{ left: 10, right: 10 }}
+            padding={{ left: 12, right: 12 }}
           />
           <YAxis width={24} stroke={textColor} />
           <CartesianGrid
